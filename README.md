@@ -12,21 +12,21 @@ Ter instalado:
 Os inputs necessários para utilizar o plugin são:
 | **Campo** | **Valor** | **Descrição** |
 | :--- | :--- | :--- |
-| Region | Padrão: "us-east-1" | Região da AWS a ser utilizada para configuração do SNS. |
+| Region | Padrão: "sa-east-1" | Região da AWS a ser utilizada para configuração do SNS. |
 
 Você pode sobrescrever a configuração padrão adicionando a seção `Sns` em seu `appsettings.json`.
 
 ```json
   "Sns": {
-      "Region": "us-east-1"
+      "Region": "sa-east-1"
   }
 ```
 
 > É possivel adicionar nessa seção o parâmetro `topicArn` para comunicação com o seu tópico. - Não Obrigatório.
 ```json
   "Sns": {
-      "Region": "us-east-1",
-      "TopicArn": "arn:aws:sns:us-east-1:000000000000:mytopic",
+      "Region": "sa-east-1",
+      "TopicArn": "arn:aws:sns:sa-east-1:000000000000:mytopic",
   }
 ```
 
@@ -108,10 +108,10 @@ services:
     environment:
       - SERVICES=sns
       - AWS_DEFAULT_OUTPUT=json
-      - DEFAULT_REGION=us-east-1
+      - DEFAULT_REGION=sa-east-1
 ```
 
 Após a criação do contâiner, crie um tópico para realizar os testes com o componente. Recomendamos que você tenha instalado em sua estação o [AWS CLI](https://aws.amazon.com/pt/cli/). Abaixo um exemplo de comando para criação de uma fila:
 
 ```
-aws  sns create-topic --endpoint-url=http://localhost:4566 --region=us-east-1 --name [NOME DO SEU TÓPCIO]
+aws  sns create-topic --endpoint-url=http://localhost:4566 --region=sa-east-1 --name [NOME DO SEU TÓPCIO]

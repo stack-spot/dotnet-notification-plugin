@@ -1,9 +1,9 @@
-name: notification-app-plugin
+name: dotnet-notification-app-plugin
 description: Plugin para instrumentar o AWS SNS.
 types:
 - app
 inputs:
-- label: Region
+- label: Region Endpoint
   type: text
   name: region
   default: "sa-east-1"
