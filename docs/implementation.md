@@ -1,37 +1,27 @@
-## **Visão Geral**
-O **notification-app-cs-plugin** adiciona em uma stack a capacidade de provisionar o uso da Amazon Simple Notification Service (SNS) publicando mensagens em tópicos do serviço.
+#### **Inputs**
 
-### **Pré-requisitos**
-Para utilizar esse plugin é necessário ter uma stack dotnet criada pelo cli do StackSpot que você pode baixar [**aqui**](https://stackspot.com.br/).
-
-Ter instalado:
-- .NET 5 ou 6 
-- O template base de `rest-app-cs-template` já deverá estar aplicado para você conseguir utilizar este plugin. 
-
-### **Inputs**
 Os inputs necessários para utilizar o plugin são:
 | **Campo** | **Valor** | **Descrição** |
 | :--- | :--- | :--- |
-| Region | Padrão: "us-east-1" | Região da AWS a ser utilizada para configuração do SNS. |
+| AWS region| Padrão: "sa-east-1" | Região da AWS a ser utilizada para configuração do SQS. |
 
 Você pode sobrescrever a configuração padrão adicionando a seção `Sns` em seu `appsettings.json`.
 
 ```json
   "Sns": {
-      "Region": "us-east-1"
+      "Region": "sa-east-1"
   }
 ```
 
 > É possivel adicionar nessa seção o parâmetro `topicArn` para comunicação com o seu tópico. - Não Obrigatório.
 ```json
   "Sns": {
-      "Region": "us-east-1",
-      "TopicArn": "arn:aws:sns:us-east-1:000000000000:mytopic",
+      "Region": "sa-east-1",
+      "TopicArn": "arn:aws:sns:sa-east-1:000000000000:mytopic",
   }
 ```
 
-### **Uso**
-Adicione ao seu `IServiceCollection` via `services.AddNotificationSns()` no `Startup` da aplicação ou `Program` tendo como parametro de entrada `IConfiguration` e `IWebHostEnvironment`. 
+#### 3. Adicione ao seu `IServiceCollection` via `services.AddNotificationSns()` no `Startup` da aplicação ou `Program` tendo como parametro de entrada `IConfiguration` e `IWebHostEnvironment`. 
 
 ```csharp
 //using StackSpot.Notification.SNS;
@@ -79,10 +69,9 @@ public class SampleController : ControllerBase
     public async Task<IActionResult> Post([FromBody] string text)
     {        
         var message = new Message(text);
-
-        var result = await _sns.Publish(test);
-
-        return Ok(result.Content);
+        var result = await _sns.Publish(message);
+        
+        return Ok($"MessageId: {result.Content}");
     }
 }
 ```
@@ -97,7 +86,7 @@ public class SampleController : ControllerBase
 * Para o funcionamento local você deve preencher a variável de ambiente `LOCALSTACK_CUSTOM_SERVICE_URL` com o valor da url do serviço. O valor padrão do localstack é http://localhost:4566.
 * Abaixo um exemplo de arquivo `docker-compose` com a criação do contâiner: 
 
-```
+```yaml
 version: '2.1'
 
 services:
@@ -108,10 +97,10 @@ services:
     environment:
       - SERVICES=sns
       - AWS_DEFAULT_OUTPUT=json
-      - DEFAULT_REGION=us-east-1
+      - DEFAULT_REGION=sa-east-1
 ```
 
 Após a criação do contâiner, crie um tópico para realizar os testes com o componente. Recomendamos que você tenha instalado em sua estação o [AWS CLI](https://aws.amazon.com/pt/cli/). Abaixo um exemplo de comando para criação de uma fila:
 
-```
-aws  sns create-topic --endpoint-url=http://localhost:4566 --region=us-east-1 --name [NOME DO SEU TÓPCIO]
+```bash
+aws sns create-topic --endpoint-url=http://localhost:4566 --region=sa-east-1 --name [NOME DO SEU TÓPCIO]
