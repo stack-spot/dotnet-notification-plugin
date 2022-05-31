@@ -1,12 +1,12 @@
 ## **Visão Geral**
-O **notification-app-cs-plugin** adiciona em uma stack a capacidade de provisionar o uso da Amazon Simple Notification Service (SNS) publicando mensagens em tópicos do serviço.
+O **dotnet-notification-plugin** adiciona em uma stack a capacidade de provisionar o uso da Amazon Simple Notification Service (SNS) publicando mensagens em tópicos do serviço.
 
 ### **Pré-requisitos**
-Para utilizar esse plugin é necessário ter uma stack dotnet criada pelo cli do StackSpot que você pode baixar [**aqui**](https://stackspot.com.br/).
+Para utilizar esse plugin é necessário ter uma stack DotNET criada pelo `CLI` do `StackSpot` que você pode baixar [**aqui**](https://stackspot.com/).
 
 Ter instalado:
 - .NET 5 ou 6 
-- O template base de `rest-app-cs-template` já deverá estar aplicado para você conseguir utilizar este plugin. 
+- O template base de `dotnet-api-template` ou o `dotnet-worker-template` deverá estar aplicado para você conseguir utilizar este plugin. 
 
 ### **Inputs**
 Os inputs necessários para utilizar o plugin são:
