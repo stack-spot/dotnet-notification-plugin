@@ -1,11 +1,11 @@
-#### **Inputs**
+### **Inputs configurados automaticamente**  
+O input abaixo é usado para configurar o plugin:  
 
-Os inputs necessários para utilizar o plugin são:
 | **Campo** | **Valor** | **Descrição** |
 | :--- | :--- | :--- |
-| AWS region| Padrão: "sa-east-1" | Região da AWS a ser utilizada para configuração do SQS. |
+| Region | Padrão: "sa-east-1" | Região da AWS que será utilizada para configurar o SNS. |
 
-Você pode sobrescrever a configuração padrão adicionando a seção `Sns` em seu `appsettings.json`.
+> É possível sobrescrever a configuração padrão adicionando a seção **`Sns`** no seu `appsettings.json`. Confira o exemplo abaixo:  
 
 ```json
   "Sns": {
@@ -13,7 +13,8 @@ Você pode sobrescrever a configuração padrão adicionando a seção `Sns` em 
   }
 ```
 
-> É possivel adicionar nessa seção o parâmetro `topicArn` para comunicação com o seu tópico. - Não Obrigatório.
+- É possivel adicionar nesta seção o parâmetro **`topicArn`** para fazer a comunicação com o seu tópico. Confira o exemplo abaixo:  
+
 ```json
   "Sns": {
       "Region": "sa-east-1",
@@ -21,19 +22,25 @@ Você pode sobrescrever a configuração padrão adicionando a seção `Sns` em 
   }
 ```
 
-#### 3. Adicione ao seu `IServiceCollection` via `services.AddNotificationSns()` no `Startup` da aplicação ou `Program` tendo como parametro de entrada `IConfiguration` e `IWebHostEnvironment`. 
+- A configuração abaixo será feita no **`IServiceCollection`**, através do `services.AddNotificationSns()`, no `Startup` da aplicação ou `Program`. Ela terá **`IConfiguration`** e **`IWebHostEnvironment`** como parametros de entrada. 
 
 ```csharp
 //using StackSpot.Notification.SNS;
 
 services.AddNotificationSns(configuration);
 ```
-> Você tem disponível as opções para customizar o seu serviço utilizando os parâmetros e sobrecargas do método `AddNotificationSns` para `ServiceLifetime` e `AWSOptions`.
 
-##### Implementação
+> O plugin oferece opções para customizar o seu serviço utilizando os parâmetros e sobrecargas do método **`AddNotificationSns`** para **`ServiceLifetime`** e **`AWSOptions`**.
 
-* A  classe da mensagem que será enviada para o serviço de notificação, deverá herdar da classe `SnsMessage`.
-* Publish - Publica uma mensagem no serviço de notificação. Por padrão utiliza o Arn do tópico configurado no `appsetings.json`. Ele irá retornar o `MessageId` em caso de sucesso.
+
+#### **Exemplos de aplicação do plugin**
+
+Confira abaixo alguns exemplos de aplicação do **`dotnet-notification-plugin`**:  
+
+> A  classe da mensagem que será enviada para o serviço de notificação deverá ser herdada da classe **`SnsMessage`**.
+
+- **Publish**  
+Publica uma mensagem no serviço de notificação. Por padrão, ele utiliza o `Arn` do tópico configurado no `appsetings.json`. Se houver sucesso, ele retornará o `MessageId`. Confira o exemplo abaixo:  
 
 ```csharp
 // using StackSpot.Notification.SNS.Common;
@@ -69,24 +76,26 @@ public class SampleController : ControllerBase
     public async Task<IActionResult> Post([FromBody] string text)
     {        
         var message = new Message(text);
-        var result = await _sns.Publish(message);
-        
-        return Ok($"MessageId: {result.Content}");
+
+        var result = await _sns.Publish(test);
+
+        return Ok(result.Content);
     }
 }
 ```
-> Adicionalmente ao plubicar uma mensagem você pode utilizar a sobrecarga do método `Publish` e informar para qual `Tópico` será enviada a mensagem através do parâmetro `topicArn`.
+Além disso, ao plubicar uma mensagem é possível utilizar a sobrecarga do método **`Publish`** e informar para qual `Tópico` será enviada a mensagem através do parâmetro `topicArn`.
 
-* A interface `INotification` também disponibiliza os métodos `ListTopics` e `ListSubscriptionsByTopic` que listam os Tópicos e Inscritos respectivamente.
+> A interface **`INotification`** também disponibiliza os métodos `ListTopics` e `ListSubscriptionsByTopic`, que listam os **Tópicos** e **Inscritos**, respectivamente.
 
-#### 4. Ambiente local
+#### **Execução em ambiente local**    
 
-* Esta etapa não é obrigatória.
-* Recomendamos, para o desenvolvimento local, a criação de um contâiner com a imagem do [Localstack](https://github.com/localstack/localstack). 
-* Para o funcionamento local você deve preencher a variável de ambiente `LOCALSTACK_CUSTOM_SERVICE_URL` com o valor da url do serviço. O valor padrão do localstack é http://localhost:4566.
-* Abaixo um exemplo de arquivo `docker-compose` com a criação do contâiner: 
+Para fazer o desenvolvimento local do plugin, crie um contêiner com a imagem do [**LocalStack**](https://github.com/localstack/localstack). 
 
-```yaml
+Para que funcione localmente, preencha a variável de ambiente **`LOCALSTACK_CUSTOM_SERVICE_URL`** com o valor da URL do serviço. O valor padrão do LocalStack é **http://localhost:4566**.
+
+Confira abaixo um exemplo de arquivo **`docker-compose`** com a criação do contêiner: 
+
+```
 version: '2.1'
 
 services:
@@ -100,7 +109,12 @@ services:
       - DEFAULT_REGION=sa-east-1
 ```
 
-Após a criação do contâiner, crie um tópico para realizar os testes com o componente. Recomendamos que você tenha instalado em sua estação o [AWS CLI](https://aws.amazon.com/pt/cli/). Abaixo um exemplo de comando para criação de uma fila:
+Depois de criar o contêiner, crie um tópico para fazer os testes com o componente. 
 
-```bash
-aws sns create-topic --endpoint-url=http://localhost:4566 --region=sa-east-1 --name [NOME DO SEU TÓPCIO]
+É recomendado que você tenha instalado em sua estação o [**AWS CLI**](https://aws.amazon.com/pt/cli/).  
+
+Confira abaixo um exemplo de comando para criar uma fila:
+
+```
+aws  sns create-topic --endpoint-url=http://localhost:4566 --region=sa-east-1 --name [NOME DO SEU TÓPICO]
+```

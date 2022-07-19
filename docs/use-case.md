@@ -1,1 +1,1 @@
-O **dotnet-notification-plugin** adiciona em uma stack a capacidade de provisionar o uso da Amazon Simple Notification Service (SNS) publicando mensagens em tópicos do serviço.
+O plugin **`dotnet-notification-plugin`** adiciona em uma Stack a capacidade de provisionar o uso da [**Amazon Simple Notification Service (SNS)**](https://aws.amazon.com/pt/sns/), publicando mensagens em tópicos do serviço.
